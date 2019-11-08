@@ -14,16 +14,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import dao.*;
 import beans.Employee;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class EmployeesListServlet extends HttpServlet {
-    
-    private EmployeeDao employeeDao;
+
+//    private EmployeeDao employeeDao;
+    private essaiDAO lEssaiDAO;
 
     public void init() throws ServletException {
-        DaoFactory daoFactory = DaoFactory.getInstance();
-        this.employeeDao = daoFactory.getEmployeeDao();
+//        DaoFactory daoFactory = new DaoFactory();
+//        this.employeeDao = daoFactory.getEmployeeDao();
+        lEssaiDAO = new essaiDAO();
     }
-    
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -49,7 +55,27 @@ public class EmployeesListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setAttribute("employees", employeeDao.getEmployees());
+        List<Employee> employees = null;
+        try {
+            employees = lEssaiDAO.getEmployeesSTP();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EmployeesListServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+//        List<Employee> employees = new ArrayList<Employee>();
+//        try (PrintWriter out = response.getWriter()) {
+//                out.println("<p> Es-tu vide : " + employees.isEmpty()+ "<p>");
+//            }
+//        request.setAttribute("employees", employees);
+
+        Employee employee1 = new Employee(1, "name1", "firstName", "teleHome", "telMob", "telPro", "address", "postalCode", "city", "mail");
+        Employee employee2 = new Employee(2, "name2", "firstName", "teleHome", "telMob", "telPro", "address", "postalCode", "city", "mail");
+        Employee employee3 = new Employee(3, "name3", "firstName", "teleHome", "telMob", "telPro", "address", "postalCode", "city", "mail");
+
+        employees.add(employee1);
+        employees.add(employee2);
+        employees.add(employee3);
+
+        request.setAttribute("employees", employees);
         this.getServletContext().getRequestDispatcher("/WEB-INF/employeesList.jsp").forward(request, response);
     }
 
@@ -64,7 +90,42 @@ public class EmployeesListServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String action = request.getParameter("action");
+        
+        List<Employee> employees = null;
+        try {
+            employees = lEssaiDAO.getEmployeesSTP();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(EmployeesListServlet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        switch (action) {
+            case "Add":
+            case "Delete":
+                
+                int id = Integer.parseInt(request.getParameter("inputId"));
+                try (PrintWriter out = response.getWriter()) {
+                    out.println("<p>" + id + "<p>");
+                    out.println("<p>" + action + "<p>");
+
+                }
+            default:
+                
+                Employee employee1 = new Employee(1, "name1", "firstName", "teleHome", "telMob", "telPro", "address", "postalCode", "city", "mail");
+                Employee employee2 = new Employee(2, "name2", "firstName", "teleHome", "telMob", "telPro", "address", "postalCode", "city", "mail");
+                Employee employee3 = new Employee(3, "name3", "firstName", "teleHome", "telMob", "telPro", "address", "postalCode", "city", "mail");
+
+                employees.add(employee1);
+                employees.add(employee2);
+                employees.add(employee3);
+
+                request.setAttribute("employees", employees);
+                this.getServletContext().getRequestDispatcher("/WEB-INF/employeesList.jsp").forward(request, response);
+                break;
+        }
+
+//        request.setAttribute("employee", employee);
+//        this.getServletContext().getRequestDispatcher("/WEB-INF/emloyeeDetails.jsp").forward(request, response);
     }
 
     /**

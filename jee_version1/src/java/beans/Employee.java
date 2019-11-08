@@ -4,7 +4,7 @@ public class Employee {
     private int id;
     private String name;
     private String firstName;
-    private String teleHome;
+    private String telHome;
     private String telMob;
     private String telPro;
     private String address;
@@ -15,20 +15,17 @@ public class Employee {
     private String password;
     private String status;
 
-    public Employee(int id, String name, String firstName, String teleHome, String telMob, String telPro, String address, String postalCode, String city, String email, String login, String password, String status) {
+    public Employee(int id, String name, String firstName, String telHome, String telMob, String telPro, String address, String postalCode, String city, String email) {
         this.id = id;
         this.name = name;
         this.firstName = firstName;
-        this.teleHome = teleHome;
+        this.telHome = telHome;
         this.telMob = telMob;
         this.telPro = telPro;
         this.address = address;
         this.postalCode = postalCode;
         this.city = city;
         this.email = email;
-        this.login = login;
-        this.password = password;
-        this.status = status;
     }
 
     public int getId() {
@@ -43,8 +40,8 @@ public class Employee {
         return firstName;
     }
 
-    public String getTeleHome() {
-        return teleHome;
+    public String getTelHome() {
+        return telHome;
     }
 
     public String getTelMob() {
@@ -91,8 +88,8 @@ public class Employee {
         this.firstName = firstName;
     }
 
-    public void setTeleHome(String teleHome) {
-        this.teleHome = teleHome;
+    public void setTelHome(String telHome) {
+        this.telHome = telHome;
     }
 
     public void setTelMob(String telMob) {
@@ -118,6 +115,20 @@ public class Employee {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    
+    
     
     public boolean isAdmin() {
         return (status == "a") ? true : false;
