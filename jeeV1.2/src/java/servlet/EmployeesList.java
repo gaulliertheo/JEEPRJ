@@ -25,129 +25,6 @@ public class EmployeesList extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet EmployeesList</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet EmployeesList at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        this.getServletContext().getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response); 
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
-        String action = request.getParameter("action");
-        
-        if (action.equals("Login")) {
-            String login = request.getParameter("inputLogin");
-            String psw = request.getParameter("inputPassword");
-            Employee user = db.login_check(login, psw);
-
-            if (user != null) {
-                System.out.println("TESTTTTTTTTTTTT");
-                HttpSession maSession = request.getSession();
-                maSession.setAttribute("user", user);
-                List<Employee> employees = new ArrayList<>();
-                try {
-                    employees = db.getEmployeesSTP();
-                } catch (SQLException ex) {
-                    Logger.getLogger(EmployeesList.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                request.setAttribute("employees", employees);
-                this.getServletContext().getRequestDispatcher("/WEB-INF/employeesList.jsp").forward(request, response);
-            } else {
-                System.out.println("ERREUR A FAIRE");
-            }
-        }
-        
-        if (action.equals("Logout")){
-            request.getSession().invalidate();
-            this.getServletContext().getRequestDispatcher("/WEB-INF/logout.jsp").forward(request, response);
-        }
-
-        if (action.equals("Modify")){ //Function to Modify an Employee
-            int id = Integer.parseInt(request.getParameter("id"));
-            String inputName = request.getParameter("inputName");
-            String inputFirstName = request.getParameter("inputFirstName");
-            String inputTelHome = request.getParameter("inputHomePhone");
-            String inputTelMob = request.getParameter("inputMobilePhone");
-            String inputTelPro = request.getParameter("inputWorkPhone");
-            String inputAddress = request.getParameter("inputAddress");
-            String inputPostalCode = request.getParameter("inputPostalCode");
-            String inputCity = request.getParameter("inputCity");
-            String inputEmail = request.getParameter("inputEmail");
-
-            try {
-                db.modifyAnEmployee(id, inputName, inputFirstName, inputTelHome, inputTelMob, inputTelPro, inputAddress, inputPostalCode, inputCity, inputEmail);
-            } catch (SQLException ex) {
-                Logger.getLogger(EmployeesList.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if (action.equals("Logout")) { //Function to Logout
-            System.out.println("TEST");
-            request.getSession().invalidate();
-            this.getServletContext().getRequestDispatcher("/WEB-INF/logout.jsp").forward(request, response);
-        }
-
-        if (action.equals("Detail")) { //Function to see details (redirect to employeeDetails.jsp
-            int inputId = Integer.parseInt(request.getParameter("inputId"));
-            Employee employee = null;
-            try {
-                employee = db.getAnEmployee(inputId);
-            } catch (SQLException ex) {
-                Logger.getLogger(EmployeesList.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            request.setAttribute("employee", employee);
-            this.getServletContext().getRequestDispatcher("/WEB-INF/employeeDetails.jsp").forward(request, response);
-        }
-
-        if (action.equals("Delete")) //Function to delete an Employee
-        {
-            int id = Integer.parseInt(request.getParameter("inputId"));
-            try {
-                db.deleteAnEmployee(id);
-            } catch (SQLException ex) {
-                Logger.getLogger(EmployeesList.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if (action.equals("Add")) { //Function to add an Employee
-            String inputName = request.getParameter("inputName");
-            String inputFirstName = request.getParameter("inputFirstName");
-            String inputTelHome = request.getParameter("inputHomePhone");
-            String inputTelMob = request.getParameter("inputMobilePhone");
-            String inputTelPro = request.getParameter("inputWorkPhone");
-            String inputAddress = request.getParameter("inputAddress");
-            String inputPostalCode = request.getParameter("inputPostalCode");
-            String inputCity = request.getParameter("inputCity");
-            String inputEmail = request.getParameter("inputEmail");
-
-            try {
-                db.addAnEmployee(inputName, inputFirstName, inputTelHome, inputTelMob, inputTelPro, inputAddress, inputPostalCode, inputCity, inputEmail);
-            } catch (SQLException ex) {
-                Logger.getLogger(EmployeesList.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if (action.equals("AddEmployee")) { //Function to redirect to addEmployee.jsp
-            this.getServletContext().getRequestDispatcher("/WEB-INF/addEmployee.jsp").forward(request, response);
-        }
-
         List<Employee> employees = new ArrayList<>();
         try {
             employees = db.getEmployeesSTP();
@@ -156,6 +33,114 @@ public class EmployeesList extends HttpServlet {
         }
         request.setAttribute("employees", employees);
         this.getServletContext().getRequestDispatcher("/WEB-INF/employeesList.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        this.getServletContext().getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String action = request.getParameter("action");
+
+        String inputName, inputFirstName, inputTelHome, inputTelMob, inputTelPro, inputAddress, inputPostalCode, inputCity, inputEmail, login, psw;
+        int id;
+
+        switch (action) {
+            case "Login":
+                login = request.getParameter("inputLogin");
+                psw = request.getParameter("inputPassword");
+                String erreur = null;
+                try {
+                    if (login.equals("") || psw.equals("")) {
+                        erreur = "You must enter values in both fields.";
+                        request.setAttribute("erreur", erreur);
+                        this.getServletContext().getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+                    }
+                    Employee user = db.login_check(login, psw);
+                    HttpSession maSession = request.getSession();
+                    maSession.setAttribute("user", user);
+                    processRequest(request, response);
+                } catch (Exception e) {
+                    erreur = "Connection failed! Verify you login/password and try again.";
+                    request.setAttribute("erreur", erreur);
+                    this.getServletContext().getRequestDispatcher("/WEB-INF/index.jsp").forward(request, response);
+                }
+
+                break;
+
+            case "Logout":
+                request.getSession().invalidate();
+                this.getServletContext().getRequestDispatcher("/WEB-INF/logout.jsp").forward(request, response);
+                break;
+
+            case "Modify":
+                id = Integer.parseInt(request.getParameter("id"));
+                inputName = request.getParameter("inputName");
+                inputFirstName = request.getParameter("inputFirstName");
+                inputTelHome = request.getParameter("inputHomePhone");
+                inputTelMob = request.getParameter("inputMobilePhone");
+                inputTelPro = request.getParameter("inputWorkPhone");
+                inputAddress = request.getParameter("inputAddress");
+                inputPostalCode = request.getParameter("inputPostalCode");
+                inputCity = request.getParameter("inputCity");
+                inputEmail = request.getParameter("inputEmail");
+                try {
+                    db.modifyAnEmployee(id, inputName, inputFirstName, inputTelHome, inputTelMob, inputTelPro, inputAddress, inputPostalCode, inputCity, inputEmail);
+                } catch (SQLException ex) {
+                    Logger.getLogger(EmployeesList.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                processRequest(request, response);
+                break;
+
+            case "Detail":
+                id = Integer.parseInt(request.getParameter("inputId"));
+                Employee employee = null;
+                try {
+                    employee = db.getAnEmployee(id);
+                } catch (SQLException ex) {
+                    Logger.getLogger(EmployeesList.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                request.setAttribute("employee", employee);
+                this.getServletContext().getRequestDispatcher("/WEB-INF/employeeDetails.jsp").forward(request, response);
+                break;
+
+            case "Delete":
+                id = Integer.parseInt(request.getParameter("inputId"));
+                try {
+                    db.deleteAnEmployee(id);
+                } catch (SQLException ex) {
+                    Logger.getLogger(EmployeesList.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                processRequest(request, response);
+                break;
+
+            case "AddEmployee":
+                this.getServletContext().getRequestDispatcher("/WEB-INF/addEmployee.jsp").forward(request, response);
+                break;
+
+            case "Add":
+                inputName = request.getParameter("inputName");
+                inputFirstName = request.getParameter("inputFirstName");
+                inputTelHome = request.getParameter("inputHomePhone");
+                inputTelMob = request.getParameter("inputMobilePhone");
+                inputTelPro = request.getParameter("inputWorkPhone");
+                inputAddress = request.getParameter("inputAddress");
+                inputPostalCode = request.getParameter("inputPostalCode");
+                inputCity = request.getParameter("inputCity");
+                inputEmail = request.getParameter("inputEmail");
+                try {
+                    db.addAnEmployee(inputName, inputFirstName, inputTelHome, inputTelMob, inputTelPro, inputAddress, inputPostalCode, inputCity, inputEmail);
+                } catch (SQLException ex) {
+                    Logger.getLogger(EmployeesList.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                processRequest(request, response);
+                break;
+        }
     }
 
     @Override

@@ -59,11 +59,11 @@
         <button type="submit" class="btn btn-light mr-3" name="action" value="Cancel" onclick="rtn()">Cancel</button>
     </div>
 </form>
-
-<%@include file="footer.jsp"%>
-
+        
 <script>
     function rtn() {
         window.history.back();
     }
 </script>
+
+<%@include file="footer.jsp"%>

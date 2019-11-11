@@ -60,10 +60,11 @@
     </div>
 </form>
 
-<%@include file="footer.jsp"%>
-
 <script>
     function rtn() {
         window.history.back();
     }
 </script>
+
+<%@include file="footer.jsp"%>
+
