@@ -42,9 +42,6 @@ WHAT WAS ASKED FOR (works for V1 AND V2):
 
 
 
-
-
-
 When you download the project, make sure that you have all the technologies installed, and for v2 wamp server started.
 First of all you should connect to the data base before running the project here are the steps:
 
@@ -60,4 +57,6 @@ V1:
 	9) Run project :)
 
 V2:
-	1)
+	1) Strat Wamp
+	2) Connect user: root, password: *none* (no password, leave it blank)
+	3) Run the project
