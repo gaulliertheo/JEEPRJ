@@ -1,8 +1,10 @@
-<%@include file="header.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:import url="header.jsp" />
 
 <h2>List of Employees</h2>
 
-<form method="post" action="employeesList">
+<form method="post" action="controller">
     <table class="table table-striped">
         <thead >
             <tr>
@@ -50,4 +52,4 @@
 
 </form>
 
-<%@include file="footer.jsp"%>
+<c:import url="footer.jsp" />

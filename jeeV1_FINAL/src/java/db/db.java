@@ -48,6 +48,10 @@ public class db {
         return resultat;
     }
     
+    /*------------------------
+    IN : the id of a specific employee
+    OUT : return this specific employee
+    ------------------------*/
     public Employee getAnEmployee(int inputId) throws SQLException{
         resultat = getResultSet("SELECT ID, NAME, FIRSTNAME, TELHOME, TELMOB, TELPRO, ADDRESS, POSTALCODE, CITY, EMAIL FROM EMPLOYEES");
 
@@ -72,7 +76,11 @@ public class db {
         return null;
     }
 
-    public List<Employee> getEmployeesSTP() throws SQLException {
+    /*------------------------
+    IN : null
+    OUT : return a list of object employees
+    ------------------------*/
+    public List<Employee> getEmployees() throws SQLException {
 
         /* Get the employees list from the data base */
         resultat = getResultSet("SELECT * FROM EMPLOYEES");
@@ -103,6 +111,10 @@ public class db {
         return employees;
     }
 
+    /*------------------------
+    IN : the login and the password of the employee who want to connect
+    OUT : return the employee who want to connect if he exist OR null if he does not
+    ------------------------*/
     public Employee login_check(String inputlogin, String inputpsw) {
 
         String query = "SELECT * FROM EMPLOYEES";
@@ -136,6 +148,10 @@ public class db {
         return null;
     }
     
+    /*------------------------
+    IN : all the parameters of the employee that will be modify
+    OUT : return none
+    ------------------------*/
     public void modifyAnEmployee(int inputId, String name, String firstName, String telHome, String telMob, String telPro, String address, String postalCode, String city, String email) throws SQLException {
         
         String query = "UPDATE EMPLOYEES SET NAME='" + name + "', FIRSTNAME='" + firstName + "', TELHOME='" + telHome + "', TELMOB='" + telMob + "', TELPRO='" + telPro + "', ADDRESS='"
@@ -144,6 +160,10 @@ public class db {
         statement.executeUpdate(query);
     }
 
+    /*------------------------
+    IN : all the parameters of the employee that will be add
+    OUT : return none
+    ------------------------*/
     public void addAnEmployee(String name, String firstName, String telHome, String telMob, String telPro, String address, String postalCode, String city, String email) throws SQLException {
         
         String query = "INSERT INTO EMPLOYEES(NAME,FIRSTNAME,TELHOME,TELMOB,TELPRO,ADDRESS,POSTALCODE,CITY,EMAIL) VALUES('" + name+ "', '" + firstName + "', '" + telHome + "', '" + telMob + "', '" + telPro + "', '" + address + "', '" + postalCode + "', '" + city + "', '" + email + "')";
@@ -151,6 +171,10 @@ public class db {
         statement.executeUpdate(query);
     }
     
+    /*------------------------
+    IN : all the parameters of the employee that will be delete
+    OUT : return none
+    ------------------------*/
     public void deleteAnEmployee(int inputId) throws SQLException{
         
         String query = "DELETE FROM EMPLOYEES WHERE ID=" + inputId;

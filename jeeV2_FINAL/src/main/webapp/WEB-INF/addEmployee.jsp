@@ -1,4 +1,6 @@
-<%@include file="header.jsp"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:import url="header.jsp" />
 
 <h2>Add an employee : </h2>
 <form method="post">
@@ -60,10 +62,10 @@
     </div>
 </form>
 
-<%@include file="footer.jsp"%>
-
 <script>
     function rtn() {
         window.history.back();
     }
 </script>
+
+<c:import url="footer.jsp" />
