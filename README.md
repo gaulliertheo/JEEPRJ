@@ -1,2 +1,0 @@
-# JEEPRJ
-Projet de JEE
