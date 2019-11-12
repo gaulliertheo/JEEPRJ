@@ -49,7 +49,7 @@ When you download the project, make sure that you have all the technologies inst
 First of all you should connect to the data base before running the project here are the steps:
 
 V1:
-	1) Click on"Services"
+	1) Click on "Services"
 	2) Right click on Databases
 	3) Click on New Connection
 	4) Select Java DB (Embedded) and click on Next
